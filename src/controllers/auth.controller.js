@@ -1,29 +1,33 @@
 const services = require("../services/auth.service");
+
 class AuthController {
   async register(req, res) {
     try {
-      const responsive = await services.register(req.body);
-      return res.status(200).json(responsive);
+      const result = await services.register(req.body);
+      const statusCode = result.error === 0 ? 201 : 400;
+      return res.status(statusCode).json(result);
     } catch (error) {
+      console.error("Register error:", error);
       return res.status(500).json({
-        error: 500,
-        message: "Interal Server Error"
-      })
+        error: 1,
+        message: "Lỗi server nội bộ"
+      });
     }
   }
 
   async login(req, res) {
     try {
-      const responsive = await services.login(req.body);
-      return res.status(200).json(responsive);
+      const result = await services.login(req.body);
+      const statusCode = result.error === 0 ? 200 : 401;
+      return res.status(statusCode).json(result);
     } catch (error) {
+      console.error("Login error:", error);
       return res.status(500).json({
-        error: 500,
-        message: "Interal Server Error"
-      })
+        error: 1,
+        message: "Lỗi server nội bộ"
+      });
     }
   }
 }
-
 
 module.exports = new AuthController();
